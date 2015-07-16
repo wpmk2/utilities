@@ -16,58 +16,150 @@ var _ = { };
   // Return an array of the first n elements of an array. If n is undefined,
   // return just the first element.
   _.first = function(array, n) {
+	if(n === undefined) {
+		return array[0];
+	}
+	else {
+		return array.splice(0, n);
+	}
   };
 
   // Like first, but for the last elements. If n is undefined, return just the
   // last element.
   _.last = function(array, n) {
+  	if(n === undefined) {
+  		return array[array.length - 1];
+  	}
+  	else if (n > array.length) {
+  		return array;  		
+   	}
+   	return array.slice(array.length - n);
   };
 
   // Call iterator(value, key, collection) for each element of collection.
   // Accepts both arrays and objects.
   _.each = function(collection, iterator) {
+  	for(var i in collection) {
+  		iterator(collection[i], i, collection);
+  	}
   };
 
   // Returns the index at which value can be found in the array, or -1 if value
   // is not present in the array.
   _.indexOf = function(array, target){
+  	for(var i = 0; i < array.length; i++) {
+  		if(target === array[i]) {
+  			return i;
+  		}
+  	}
+  	return -1;
   };
 
   // Return all elements of an array that pass a truth test.
   _.filter = function(collection, iterator) {
+    for(var i = 0; i < collection.length; i++) {
+        if(!iterator(collection[i])) {
+            collection.splice(i, 1)
+            i--;
+        }
+    }
+    return collection;
   };
 
   // Return all elements of an array that don't pass a truth test.
   _.reject = function(collection, iterator) {
+    for(var i = 0; i < collection.length; i++) {
+        if(iterator(collection[i])) {
+            collection.splice(i, 1)
+            i--;
+        }
+    }
+    return collection;
   };
 
-  // Produce a duplicate-free version of the array.
+  //Produce a duplicate-free version of the array.
   _.uniq = function(array) {
+    var i;
+    var j;
+    var len = array.length;
+    for(i = 0; i < len; i++) {
+        for(j = i + 1; j < len; j++) {
+            if(array[i] === array[j]) {
+                array.splice(j, 1);
+            }
+        }
+    }
+    return array;
   };
+  
+  // _.uniq = function(array) {      //working on a much less expensive version
+  //   var i;
+  //   for(i = 0; i < array.length; i++) {
+  //       if(array[i] === array[j]) {
+  //          array.splice(j, 1);
+  //       }
+  //   }
+  //   return array;
+  // };
 
 
   // Return the results of applying an iterator to each element.
   _.map = function(array, iterator) {
+    var newArr = [];
+    for(var i = 0; i < array.length; i++) {
+        newArr.push(iterator(array[i]));
+    }
+    return newArr;
   };
 
   // Takes an array of objects and returns and array of the values of
   // a certain property in it. E.g. take an array of people and return
   // an array of just their ages
   _.pluck = function(array, propertyName) {
+    var i;
+    var len = array.length;
+    var propArr = [];
+    for(i = 0; i < len; i++) {
+        propArr.push(array[i][propertyName]);
+    }
+    return propArr;
   };
 
   // Calls the method named by methodName on each value in the list.
-  _.invoke = function(list, methodName, args) {
+  _.invoke = function(list, methodName, args) {    //TROUBLE HERE
+    var newList = [];
+    for(var i in list) {
+        if(typeof methodName === "function") {
+            newList.push(methodName.apply(list[i], args));
+        } else {
+        newList.push(list[i][methodName](args));
+        }
+    }
+    return newList;
   };
 
   // Reduces an array or object to a single value by repetitively calling
   // iterator(previousValue, item) for each item. previousValue should be
   // the return value of the previous iterator call.
-  _.reduce = function(collection, iterator, initialValue) {
+  _.reduce = function(collection, iterator, initialValue) {  //TROUBLE HERE
+    var previousValue = initialValue;
+    var i;
+    var len = collection.length;
+    for(i = 0; i < len; i++) {
+
+        previousValue = iterator(previousValue, item);
+    }
   };
 
   // Determine if the array or object contains a given value (using `===`).
   _.contains = function(collection, target) {
+    var i;
+    for(i in collection) {
+        if(target === collection[i]) {
+            return true;
+        }
+    }
+    return false;
   };
 
 
